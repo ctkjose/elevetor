@@ -5,14 +5,22 @@
 
   <title>Elevetors</title>
   <meta name="description" content="Elevators">
-  <link rel="stylesheet" href="css/styles.css?v=1.0">
+  <link rel="stylesheet" href="css/elevators.css?v=1.0">
 </head>
 
 <body>
+	<div class="elvConsole"></div>
   <script src="js/elevators.js"></script>
 <script>
 document.addEventListener("DOMContentLoaded", function(e) {
     console.log("Loading Elevators");
+	if(elevator_manager){
+		let ops = {
+			consoleSel: ".elvConsole",
+		};
+		elevator_manager.init(ops);
+	}
+	
 });
 </script>
 </body>
