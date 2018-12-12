@@ -15,13 +15,13 @@
 <script>
 document.addEventListener("DOMContentLoaded", function(e) {
     console.log("Loading Elevators");
-	if(elevator_manager){
+	if(elevatorManager){
 		let ops = {
 			consoleSel: ".elvConsole",
 		};
-		elevator_manager.init(ops);
+		elevatorManager.init(ops);
 		
-		simulation.start(elevator_manager);
+		simulation.start(elevatorManager);
 	}
 	
 	

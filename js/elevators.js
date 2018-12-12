@@ -14,7 +14,8 @@ var helper = {
 	}
 }
 
-var elevator_manager = {
+var elevatorManager = {
+	items: {},
 	init: function(options){
 		console.log("@elevator_manager::init()");
 		this.consoleSel = options;
@@ -24,20 +25,43 @@ var elevator_manager = {
 		
 	},
 	manageElevator: function(elv){
+		this.items[elv.code] = elv;
+		
 		
 	},
+	getAvailableElevator: function(location){
+		var elvs = [];
+		
+		for(var k in this.items){
+			var elv = this.items[k];
+			if(elv.status >= this.elevator.kStatusOutOfService) continue;
+		}
+		
+		return elvs;
+	},
+	callButton: function(location, floor, dir){
+				
+	},
 	elevator: {
+		kStatusIdle: 0,
+		kStatusTraveling: 1,
+		kStatusOutOfService: 100,
+		kDirectionUp: 1,
+		kDirectionDown: 2,
 		create: function(options){
 			var defaults = {
 				code: "RANDELV",
+				location: "GENERAL",
 				floorServiceStart: 1,
 				floorServiceEnd: 10,
 			};
 				
-			var ops = helper.extend(defaults, options);
-			console.log("ops are %o", ops);
-				
-			var elv = {};
+		
+			var elv = {
+				status: this.kStatusOutOfService,
+				travelDirection: this.kDirectionUp,
+				ops: helper.extend(defaults, options),
+			};
 			this.decorate(elv);
 			return elv;
 				
@@ -48,9 +72,14 @@ var elevator_manager = {
 			}
 		},
 		fn: {
-			test1: function(){
+			
+			callButton: function(floor, dir){
 				
+			},
+			canTravel: function(floor, dir){
+				if(this.status >= kStatusOutOfService ) return false;
 			}
+			
 		},
 	},
 	
