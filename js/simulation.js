@@ -4,10 +4,18 @@ var simulation = {
 		
 		
 		var elv = elvManager.elevator.create({
-			code: "MainLobby01",	
-			
+			code: "MAINLOBBY01",	
+			location: "LOBBY",
 		});
 		console.log(elv);
+		
+		elvManager.manageElevator(elv);
+		
+		elvManager.startService();
+		
+		
+		var elvToUse = elvManager.callButton("LOBBY", 2, elvManager.kDirectionUp);
+		console.log(elvToUse);
 	}
 	
 	

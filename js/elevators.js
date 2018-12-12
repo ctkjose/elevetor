@@ -25,7 +25,10 @@ var elevatorManager = {
 		return this;
 	},
 	startService: function(){
-		
+		for(var k in this.items){
+			let elv = this.items[k];
+			elv.status = this.elevator.kStatusIdle;
+		}
 	},
 	manageElevator: function(elv){
 		this.items[elv.code] = elv;
@@ -36,8 +39,8 @@ var elevatorManager = {
 		var elvs = [];
 		
 		for(var k in this.items){
-			var elv = this.items[k];
-			if(elv.status >= this.elevator.kStatusOutOfService) continue;
+			let elv = this.items[k];
+			if(!elv.canTravel()) continue;
 			if(elv.location != location) continue;
 			elvs.push(elv);
 		}
@@ -80,11 +83,13 @@ var elevatorManager = {
 			let e = elvs[i];
 			console.log("evaluating elv[%d] %o", i, e);
 			//for now dont consider diff travel direction as option
-			if(e.travelDirection != dir) continue;
-			if(dir == this.elevator.kDirectionUp){
-				if(e.floor > floor) continue;	
-			}else{
-				if(e.floor < floor) continue;
+			if(e.status == this.elevator.kStatusTraveling){
+				if(e.travelDirection != dir) continue;
+				if(dir == this.elevator.kDirectionUp){
+					if(e.floor > floor) continue;	
+				}else{
+					if(e.floor < floor) continue;
+				}
 			}
 			availableElvs.push(e);
 			
@@ -122,11 +127,15 @@ var elevatorManager = {
 				status: this.kStatusOutOfService,
 				floor: 0,
 				floorTarget: 0,
+				flootStops: [],
 				serviceCount: 0,
+				
 				travelDirection: this.kDirectionUp,
 				ops: helper.extend(defaults, options),
 			};
 			
+			elv.code = elv.ops.code;
+			elv.location = elv.ops.location;
 			elv.floor = elv.ops.floorServiceStart;
 			
 			this.decorate(elv);
@@ -159,12 +168,15 @@ var elevatorManager = {
 				if(this.floor == this.floorTarget){
 					this.manager.controlElevatorReachFloor(this);
 				}
+				
+				//check next floor stop in que and continue travel
 			},
 			callButton: function(floor, dir){
 				
 			},
 			canTravel: function(floor, dir){
 				if(this.status >= kStatusOutOfService ) return false;
+				return true;
 			}
 			
 		},
