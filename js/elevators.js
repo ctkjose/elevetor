@@ -114,10 +114,13 @@ var elevatorManager = {
 		elv.queFloor(targetFloor);
 		
 		if(elv.dir == this.elevator.kDirectionUp){
-			if(elv.floor < callFloor) elv.queFloor(callFloor);
+			if(elv.floor <= callFloor) elv.queFloor(callFloor);
 		}else{
-			if(elv.floor > callFloor) elv.queFloor(callFloor);
+			if(elv.floor >= callFloor) elv.queFloor(callFloor);
 		}
+		
+		console.log("@queElevator %d,%d", callFloor, targetFloor);
+		console.log(elv);
 		
 		elv.travel();
 	},
@@ -195,6 +198,8 @@ var elevatorManager = {
 				
 				var _this = this;
 				var idx = this.flootStops.indexOf(this.floor);
+				console.log("current floor %d, queid=%d",this.floor, idx );
+				console.log(this);
 				//check next floor stop in que and continue travel
 				if(idx >= 0 ){
 					this.flootStops.splice(idx, 1); //remove
