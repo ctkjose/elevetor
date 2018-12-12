@@ -17,7 +17,7 @@ var simulation = {
 		//move to test fn
 		//test primitives...
 		var location = "LOBBY";
-		var targetFloor = 2;
+		var targetFloor = 6;
 		var callFloor = 1;
 		var dir = elvManager.kDirectionUp;
 		
@@ -27,6 +27,7 @@ var simulation = {
 			return;
 		}
 		elvManager.queElevator(elvToUse,  callFloor, targetFloor, dir);
+		elvManager.queElevator(elvToUse,  3, 5, dir);
 		console.log(elvToUse);
 		
 		
