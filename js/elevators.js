@@ -118,6 +118,8 @@ var elevatorManager = {
 		}else{
 			if(elv.floor > callFloor) elv.queFloor(callFloor);
 		}
+		
+		elv.travel();
 	},
 	elevator: {
 		kStatusIdle: 0,
@@ -186,6 +188,8 @@ var elevatorManager = {
 				}
 				
 				//check next floor stop in que and continue travel
+				
+				
 			},
 			continueTravel: function(floor, dir){
 				

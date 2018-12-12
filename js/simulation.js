@@ -17,16 +17,19 @@ var simulation = {
 		//move to test fn
 		//test primitives...
 		var location = "LOBBY";
-		var floor = 2;
+		var targetFloor = 2;
+		var callFloor = 1;
 		var dir = elvManager.kDirectionUp;
 		
-		var elvToUse = elvManager.callButton(location, floor, dir);
+		var elvToUse = elvManager.callButton(location, callFloor, targetFloor, dir);
 		if(!elvToUse){
 			console.log("no elv available here....");
 			return;
 		}
-		elvManager.queElevator(elvToUse, floor, dir);
+		elvManager.queElevator(elvToUse,  callFloor, targetFloor, dir);
 		console.log(elvToUse);
+		
+		
 	}
 	
 	
