@@ -98,7 +98,8 @@ var elevatorManager = {
 				}else{
 					this.floor = Math.max(this.floor,  this.ops.floorServiceStart);
 				}
-)
+				
+				
 				this.manager.controlElevatorReachNextFloor(this);
 			},
 			callButton: function(floor, dir){
