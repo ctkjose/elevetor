@@ -191,7 +191,7 @@ var elevatorManager = {
 				
 			},
 			canTravel: function(floor, dir){
-				if(this.status >= kStatusOutOfService ) return false;
+				if(this.status >= elevatorManager.elevator.kStatusOutOfService ) return false;
 				return true;
 			}
 			
