@@ -166,7 +166,12 @@ var elevatorManager = {
 		
 		fn: {
 			queFloor: function(floor){
+				// check if already in que
+				if(this.flootStops.indexOf(floor) < 0) return true;
 			
+				
+				this.flootStops.push(floor);
+				return true;
 			},
 			travel: function(){
 				var _this = this;
@@ -188,12 +193,38 @@ var elevatorManager = {
 					this.manager.controlElevatorReachFloor(this);
 				}
 				
+				var _this = this;
+				var idx = this.flootStops.indexOf(this.floor);
 				//check next floor stop in que and continue travel
+				if(idx >= 0 ){
+					this.flootStops.splice(idx, 1); //remove
+					//open door...
+					//more stufff
+					//report with controller...
+					
+					var waitForPeopleTravel = new Promise(function(resolve, reject){
+						setTimeout(function(){
+								resolve();
+						}, 100);
+					});
 				
+					waitForPeopleTravel.then(function(){
+						if(_this.flootStops.length > 0){
+							_this.continueTravel();
+						}
+					})
+				
+				}else if(this.flootStops.length > 0){
+					this.continueTravel();
+				}
 				
 			},
 			continueTravel: function(floor, dir){
+				//do things
+				//report with controller...
+				console.log("@elevator.continueTravel");
 				
+				this.travel();
 			},
 			canTravel: function(floor, dir){
 				if(this.status >= elevatorManager.elevator.kStatusOutOfService ) return false;
