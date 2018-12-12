@@ -17,6 +17,9 @@ var elevator_manager = {
 	init: function(options){
 		console.log("@elevator_manager::init()");
 		this.consoleSel = options;
+		return this;
+	},
+	startService: function(){
 		
 	},
 	createElevator: function(options){
@@ -25,7 +28,6 @@ var elevator_manager = {
 			floorServiceStart: 1,
 			floorServiceEnd: 2,
 		};
-		
 	},
 	manageElevator: function(elv){
 		
