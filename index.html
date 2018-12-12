@@ -10,7 +10,8 @@
 
 <body>
 	<div class="elvConsole"></div>
-  <script src="js/elevators.js"></script>
+	<script src="js/elevators.js"></script>
+	<script src="js/simulation.js"></script>
 <script>
 document.addEventListener("DOMContentLoaded", function(e) {
     console.log("Loading Elevators");
@@ -19,7 +20,10 @@ document.addEventListener("DOMContentLoaded", function(e) {
 			consoleSel: ".elvConsole",
 		};
 		elevator_manager.init(ops);
+		
+		simulation.start(elevator_manager);
 	}
+	
 	
 });
 </script>
