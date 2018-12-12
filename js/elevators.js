@@ -49,13 +49,11 @@ var elevatorManager = {
 	},
 	controlElevatorReachNextFloor: function(elv){
 		//Report travel and status
-		console.log("Reached next floor");
-		console.log(elv);
+		console.log("Reached next floor %d", elv.floor);
 	},
 	controlElevatorReachFloor: function(elv){
 		//Reached floor
-		console.log("Reached requested floor");
-		console.log(elv);
+		console.log("Reached requested floor %d", elv.floor);
 		
 		
 		elv.serviceCount++;
@@ -114,9 +112,9 @@ var elevatorManager = {
 		elv.queFloor(targetFloor);
 		
 		if(elv.dir == this.elevator.kDirectionUp){
-			if(elv.floor <= callFloor) elv.queFloor(callFloor);
+			if(elv.floor < callFloor) elv.queFloor(callFloor);
 		}else{
-			if(elv.floor >= callFloor) elv.queFloor(callFloor);
+			if(elv.floor > callFloor) elv.queFloor(callFloor);
 		}
 		
 		console.log("@queElevator %d,%d", callFloor, targetFloor);
@@ -145,7 +143,7 @@ var elevatorManager = {
 				status: this.kStatusOutOfService,
 				floor: 0,
 				floorTarget: 0,
-				flootStops: [],
+				floorStops: [],
 				serviceCount: 0,
 				
 				travelDirection: this.kDirectionUp,
@@ -170,19 +168,23 @@ var elevatorManager = {
 		fn: {
 			queFloor: function(floor){
 				// check if already in que
-				if(this.flootStops.indexOf(floor) < 0) return true;
-			
-				
-				this.flootStops.push(floor);
+				if(this.floorStops.indexOf(floor) >= 0) return true;
+				this.floorStops.push(floor);
 				return true;
 			},
 			travel: function(){
+				if(this.status == elevatorManager.elevator.kStatusTraveling) return;
+				
+				this.status = elevatorManager.elevator.kStatusTraveling;
 				var _this = this;
 				setTimeout(function(){
 					_this.reachNextFloor();
 				}, 200);
 			},
 			reachNextFloor: function(){
+				
+				console.log("@reachNextFloor");
+				this.status = elevatorManager.elevator.kStatusIdle;
 				this.floor += this.travelDirection;
 				if(this.travelDirection == elevatorManager.elevator.kDirectionUp){
 					this.floor = Math.min(this.floor,  this.ops.floorServiceEnd);
@@ -192,21 +194,20 @@ var elevatorManager = {
 				
 				
 				this.manager.controlElevatorReachNextFloor(this);
-				if(this.floor == this.floorTarget){
-					this.manager.controlElevatorReachFloor(this);
-				}
+				
 				
 				var _this = this;
-				var idx = this.flootStops.indexOf(this.floor);
+				var idx = this.floorStops.indexOf(this.floor);
 				console.log("current floor %d, queid=%d",this.floor, idx );
 				console.log(this);
 				//check next floor stop in que and continue travel
 				if(idx >= 0 ){
-					this.flootStops.splice(idx, 1); //remove
+					this.floorStops.splice(idx, 1); //remove
 					//open door...
 					//more stufff
 					//report with controller...
-					
+					this.manager.controlElevatorReachFloor(this);
+
 					var waitForPeopleTravel = new Promise(function(resolve, reject){
 						setTimeout(function(){
 								resolve();
@@ -214,23 +215,28 @@ var elevatorManager = {
 					});
 				
 					waitForPeopleTravel.then(function(){
-						if(_this.flootStops.length > 0){
-							_this.continueTravel();
-						}
-					})
-				
-				}else if(this.flootStops.length > 0){
+						if( _this.needToTravel() ) _this.continueTravel();
+					});
+					
+				}else if(this.floorStops.length > 0){
 					this.continueTravel();
+				}else{
+					this.status = elevatorManager.elevator.kStatusIdle;
 				}
 				
+			},
+			needToTravel: function(){
+				return (this.floorStops.length > 0);
 			},
 			continueTravel: function(floor, dir){
 				//do things
 				//report with controller...
 				console.log("@elevator.continueTravel");
 				
+				
 				this.travel();
 			},
+			
 			canTravel: function(floor, dir){
 				if(this.status >= elevatorManager.elevator.kStatusOutOfService ) return false;
 				return true;
