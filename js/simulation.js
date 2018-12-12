@@ -14,7 +14,18 @@ var simulation = {
 		elvManager.startService();
 		
 		
-		var elvToUse = elvManager.callButton("LOBBY", 2, elvManager.kDirectionUp);
+		//move to test fn
+		//test primitives...
+		var location = "LOBBY";
+		var floor = 2;
+		var dir = elvManager.kDirectionUp;
+		
+		var elvToUse = elvManager.callButton(location, floor, dir);
+		if(!elvToUse){
+			console.log("no elv available here....");
+			return;
+		}
+		elvManager.queElevator(elvToUse, floor, dir);
 		console.log(elvToUse);
 	}
 	

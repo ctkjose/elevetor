@@ -66,7 +66,7 @@ var elevatorManager = {
 			elv.status = this.elevator.kStatusIdle;
 		}
 	},
-	callButton: function(location, floor, dir){
+	callButton: function(location, callFloor, targetFloor, dir){
 		var elvs = this.getAvailableElevator(location);
 		
 		///TODO:save push log/statistics
@@ -83,17 +83,19 @@ var elevatorManager = {
 			let e = elvs[i];
 			console.log("evaluating elv[%d] %o", i, e);
 			//for now dont consider diff travel direction as option
+			//add code to consider from where was the elevator requested (callFloor)
+			
 			if(e.status == this.elevator.kStatusTraveling){
 				if(e.travelDirection != dir) continue;
 				if(dir == this.elevator.kDirectionUp){
-					if(e.floor > floor) continue;	
+					if(e.floor > targetFloor) continue;	
 				}else{
-					if(e.floor < floor) continue;
+					if(e.floor < targetFloor) continue;
 				}
 			}
 			availableElvs.push(e);
 			
-			let dist = Math.abs(e.floor-floor);
+			let dist = Math.abs(e.floor-targetFloor);
 			if(dist < lastDist){
 				bestElvIdx = availableElvs.length-1;
 			}
@@ -107,12 +109,23 @@ var elevatorManager = {
 		}
 		return undefined;
 	},
+	queElevator: function(elv, callFloor, targetFloor, dir){
+		//ignore dir for know asume, elv is idle or traveling in desired dir
+		elv.queFloor(targetFloor);
+		
+		if(elv.dir == this.elevator.kDirectionUp){
+			if(elv.floor < callFloor) elv.queFloor(callFloor);
+		}else{
+			if(elv.floor > callFloor) elv.queFloor(callFloor);
+		}
+	},
 	elevator: {
 		kStatusIdle: 0,
 		kStatusTraveling: 1,
 		kStatusOutOfService: 100,
 		kDirectionUp: 1,
 		kDirectionDown: -1,
+		
 		create: function(options){
 			var defaults = {
 				code: "RANDELV",
@@ -141,6 +154,9 @@ var elevatorManager = {
 			this.decorate(elv);
 			return elv;
 				
+		},
+		queFloor: function(floor){
+			
 		},
 		decorate: function(obj){
 			for(var key in this.fn){
@@ -171,7 +187,7 @@ var elevatorManager = {
 				
 				//check next floor stop in que and continue travel
 			},
-			callButton: function(floor, dir){
+			continueTravel: function(floor, dir){
 				
 			},
 			canTravel: function(floor, dir){
