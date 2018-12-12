@@ -157,9 +157,7 @@ var elevatorManager = {
 			return elv;
 				
 		},
-		queFloor: function(floor){
-			
-		},
+		
 		decorate: function(obj){
 			for(var key in this.fn){
 				obj[key] = this.fn[key];
@@ -167,6 +165,9 @@ var elevatorManager = {
 		},
 		
 		fn: {
+			queFloor: function(floor){
+			
+			},
 			travel: function(){
 				var _this = this;
 				setTimeout(function(){
